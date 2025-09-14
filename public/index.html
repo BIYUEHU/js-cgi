@@ -1,0 +1,66 @@
+<!DOCTYPE server>
+<script server>
+  let x22 = 221;
+  write(x22);
+</script>
+<script server>
+  x22 = 222;
+  write(x22);
+</script>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PHP-Style TS Server</title>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>用户信息</h1>
+
+    <script server>
+      write(x22 + 2);
+      // Server js
+      write("<p>这是服务器直接渲染的内容。</p>");
+      write(JSON.stringify(this, null, 2).replace(/\n/g, "<br />"));
+      write(
+        `<p>你的IP是: <code>${REQ.remote_addr}</code> 服务器IP是：<code>${REQ.server_addr}</code></p>`,
+      );
+      // 模拟从“数据库”获取数据
+      const users = [
+        { id: 1, name: "Alice", email: "alice@example.com" },
+        { id: 2, name: "Bob", email: "bob@example.com" },
+      ];
+
+      write("<h2>用户列表:</h2><ul>");
+      for (const user of users) {
+        write(`<li>${user.name} (${user.email})</li>`);
+      }
+      write("</ul>");
+
+      // 处理查询参数
+      if ("name" in REQ.query) {
+        write(
+          `<p>Hello, <strong/>${REQ.query.name}</strong>! Welcome from the query string.</p>`,
+        );
+      }
+    </script>
+
+    <p>这是普通的HTML内容。</p>
+
+    <form method="GET">
+      <input type="text" name="name" placeholder="Enter your name" />
+      <button type="submit">Submit via GET</button>
+    </form>
+
+    <p id="client"></p>
+
+    <script>
+      const client = document.getElementById("client");
+      client.textContent = "这是客户端JS内容。";
+    </script>
+  </body>
+</html>
